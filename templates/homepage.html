@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+  <title>Sudoku_Solver</title>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">
+        <img src="static/sudoku.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+        Sudoku_Solver
+      </a>
+      <i><b>Solve any Sudoku in a Blink 😉</b></i>
+      <a href="https://www.linkedin.com/in/sthitapragyan-mallick-192a81284/" target="_blank" style="text-decoration:none; color: #000;">Developed by Sthitapragyan 😎</a>
+    </div>
+  </nav>
+  <div style="display: inline; float: left;">
+    <div id="arrow" style="display: inline; float:right;margin-top: 130px;width: 23%; visibility: hidden  ;">
+      <img src="static/arrow.gif" alt="right arrow" style="margin-top: 100px;">
+    </div>
+    <div style="width:75%; display: inline; float:left;margin-left: 15px;margin-top: 20px;">
+      <form action="/" method="POST" id="sudokuform">
+        {% for i in range(1,12) %}
+        <div class="input-group">
+          {% for j in range(1,12) %}
+          {% if i in [4,8] or j in [4,8] %}
+          <input type="text" disabled="True" id="{{i}}{{j}}" name="{{i}}{{j}}"
+            style="width: 50px  ;height: 50px;background: #000">
+          {% else %}
+          <input type="number" min="1" max="9"  maxlength="1" value="" id="{{i}}{{j}}" name="{{i}}{{j}}"
+            style="width: 50px  ;height: 50px; text-align: center; font-size: xx-large ; font-weight: bold;" ;>
+          {% endif %}
+          {% endfor %}
+        </div>
+        {% endfor %}
+      </form>
+      <div style="margin-top: 10px;margin-left: 335px;">
+        <button type="submit" id="submit" class="btn btn-outline-success" form="sudoku"
+          style="height:50px;width: 100px; font-size: x-large;">Submit</button>
+        <button type="submit" id="resetbut" class="btn btn-outline-danger" form="sudoku"
+          style="height:50px;width: 100px; font-size: x-large;">Reset</button>
+      </div>
+    </div>
+  </div>
+  <div style="width: 40%; display: inline;float:right;margin-top: 20px;margin-right: 10px;">
+    <table id="tablesol">
+      {% for i in range(1,12) %}
+      <tr>
+        {% for j in range(1,12) %}
+        {% set ans = ans_grid[(i,j)] %}
+        {% if i in [4,8] or j in [4,8] %}
+        <td style="background: black;border:2px solid black; width: 50px;height: 50px; ">{{ans}}</td>
+        {% else %}
+        <td id="ans{{i}}{{j}}" name="ans{{i}}{{j}}"
+          style="border: 2px solid black;background: rgb(40, 235, 89); width: 50px;height: 50px;text-align: center;font-size: x-large;font-weight: bold;">
+          {{ans}}</td>
+        {% endif %}
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </table>
+    <div id="loader" style="display: none ; margin-top: 10px;margin-left: 200px;">
+      <button class="btn btn-primary" type="button" disabled>
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        <strong style="font-size: x-large;">Processing</strong>
+      </button>
+    </div>
+    <div style="display: inline-block; margin-top: 10px;margin-left: 200px;">
+      <button  id="done" class="btn btn-primary" type="button" style="background: green; visibility: hidden;" disabled>
+        <strong style="font-size: x-large;">--- Done !! ---</strong>
+      </button>
+    </div>
+  </div>
+  <script>
+    const loadButton =
+      document.getElementById('submit');
+    const loader =
+      document.getElementById('loader');
+    const resetbutton = document.getElementById('resetbut')
+    const formm = document.getElementById('sudokuform')
+    const arrow = document.getElementById('arrow')
+    loadButton.addEventListener('click', () => {
+      // Disable the button 
+      // and prevent further clicks 
+      formm.submit()
+      loadButton.disabled = true;
+      arrow.style.visibility = 'visible'
+      loader.style.display = 'inline-block'
+      const done = document.getElementById("done");
+      done.style.visibility='hidden'
+
+    });
+
+    resetbutton.addEventListener('click', () => {
+      window.location.href = '/';
+    });
+  </script>
+  <script>
+    const tbl=document.getElementById("ans11")
+    ans=tbl.innerText
+    const done = document.getElementById("done");
+    if (ans != "") {
+      done.style.visibility='visible'
+    }
+    else if('{{ans_grid}}'=='wrong'){
+      done.style.visibility='visible'
+      done.style.background='red'
+      done.innerText='--- Unsolvable !! ---'
+      done.style.fontSize='x-large'
+    }
+  </script>
+  <!-- Optional JavaScript; choose one of the two! -->
+
+  <!-- Option 1: Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+
+  <!-- Option 2: Separate Popper and Bootstrap JS -->
+  <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    -->
+</body>
+
+</html>
