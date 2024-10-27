@@ -13,6 +13,8 @@ A sudoku solver which solves it in a blink.
 ## Introduction
 This project is a web-based Sudoku solver that can solve any Sudoku puzzle almost instantaneously.
 
+You can view a live sample at [sudoku-solver-web.onrender.com](https://sudoku-solver-web.onrender.com).
+
 ## Features
 - Solve Sudoku puzzles quickly and efficiently.
 - Web interface for easy interaction.
